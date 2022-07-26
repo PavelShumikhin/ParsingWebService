@@ -8,17 +8,18 @@ using System.Threading.Tasks;
 
 namespace ParsingWebService
 {
-    abstract class Request
+   public abstract class MyRequest
     {
         
         public string adress;
         public string Responce { get; set; }
+        public DateTime thisTime { get; set; }
 
-        public Request(string _adress)
+        public MyRequest(string _adress)
         {           
             adress = _adress;
         }
-        abstract public Data Create();
+        abstract public abstractData Create(string adress);
         abstract public void Run();
     }
 }

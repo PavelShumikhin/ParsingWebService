@@ -3,14 +3,46 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ParsingWebService"
+        xmlns:mvvm="clr-namespace:ParsingWebService.Class.MVVM" xmlns:class="clr-namespace:ParsingWebService.Class" d:DataContext="{d:DesignInstance Type=class:ApplicationViewNumber}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="400">
-    <Grid>
+        Title="Veb Parsing" Height="800" Width="800">
+    <Grid Background="LightGreen">
+
         <StackPanel>
-            <TextBox x:Name="tb" Text="Test"/>
-            <Label x:Name="lb"/>
-            <ListBox x:Name="ListBoxDataVebParsing"/>
+
+            <Label x:Name="lb" Content="Veb Parsing numbersapi.com" FontSize="40" Background="AliceBlue"/>
+            <Menu>
+                <MenuItem Header="История">
+                    <Button Content="Показать всю историю" Command="{Binding ShowDB}"></Button>
+                </MenuItem>
+            </Menu>
+            <Grid>
+
+                <ListBox x:Name="ListBoxDataVebParsing" Height="600"  Background="LightBlue" 
+                         ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                     ItemsSource="{Binding NumberDataCollection}"
+                     SelectedItem="{Binding SelectedData}"  >
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="5">
+                                <TextBlock FontSize="18" Text="{Binding Path=outputRuquest}" />
+                                <TextBlock FontSize="18" Text="{Binding Path=thisTime}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+            </Grid>
+            <StackPanel>
+                
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Button  x:Name="Start" Content="Получить" Width="200" Height="70" Command="{Binding AddCommand}"/>
+                <Button  x:Name="StartAuto" Content="Автономный запуск" Width="200" Height="70" Command="{Binding AutoAddCommand}"/>
+                <Button  x:Name="InputDate" Content="Ввести дату" Width="200" Height="70" Command="{Binding InputDate}"/>
+            </StackPanel>
+
         </StackPanel>
+
     </Grid>
 </Window>

@@ -8,12 +8,16 @@ using System.Threading.Tasks;
 
 namespace ParsingWebService.Class
 {
-     class NumberRequest:Request
+    public class NumberRequest:MyRequest
     {
         public HttpWebRequest request;
-       // public string Responce { get; set; }
-        public NumberRequest(string _adress) : base( _adress) { }
-        public override Data Create()
+        public NumberRequest(string _adress) : base( _adress) 
+        {
+            Run();
+            thisTime = DateTime.Now;
+        }
+        
+        public override abstractData Create(string _adress)
         {
             return new NumberData();
         }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ParsingWebService.Class
 {
-    abstract class Data
+   public abstract class abstractData
     {
     }
 }
