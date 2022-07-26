@@ -9,11 +9,14 @@ using System.Collections.ObjectModel;
 using Newtonsoft.Json.Linq;
 using ParsingWebService.Class.MVVM;
 using ParsingWebService.Class.Команды;
+using System.Windows.Controls;
+using System.Windows;
 
 namespace ParsingWebService.Class
 {
     public class ApplicationViewNumber:INotifyPropertyChanged
     {
+        private static WindowInputDate windowInputDate = null;
         public string day { get; set; }
         public string month { get; set; }
         private NumberRequest selectedNumber;
@@ -137,14 +140,14 @@ namespace ParsingWebService.Class
                 return inputDate ??
                     (inputDate = new RelayCommand(obj =>
                     {
-                        WindowInputDate windowInputDate = new WindowInputDate();
+                        windowInputDate = new WindowInputDate();
                         windowInputDate.showDateWindow();
 
                     }));
             }
         }
 
-        //Добавить результата по введенным днем и месяце
+        //Добавить результата по введенным днем и месяц
         private RelayCommand addCommandInput;
         public RelayCommand AddCommandInput
         {
@@ -182,9 +185,8 @@ namespace ParsingWebService.Class
                 return cancelDate ??
                     (cancelDate = new RelayCommand(obj =>
                     {
-                        WindowInputDate windowInputDate= new WindowInputDate();
-                        windowInputDate.cancelDateWindow();
-                        //windowInputDate.Close();
+              
+                        windowInputDate?.cancelDateWindow();
 
                     }));
             }
