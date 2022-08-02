@@ -10,7 +10,7 @@
 
         <StackPanel>
 
-            <Label x:Name="lb" Content="Veb Parsing numbersapi.com" FontSize="40" Background="AliceBlue"/>
+            <Label x:Name="lb" Content="Web Parsing numbersapi.com" FontSize="40" Background="AliceBlue"/>
             <Menu>
                 <MenuItem Header="История">
                     <Button Content="Показать всю историю" Command="{Binding ShowDB}"></Button>
@@ -19,9 +19,9 @@
             <Grid>
 
                 <ListBox x:Name="ListBoxDataVebParsing" Height="600"  Background="LightBlue" 
-                         ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                         ScrollViewer.VerticalScrollBarVisibility="Visible"
                      ItemsSource="{Binding NumberDataCollection}"
-                     SelectedItem="{Binding SelectedData}"  >
+                     SelectedItem="{Binding SelectedData ,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  >
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Margin="5">
@@ -39,6 +39,7 @@
             <StackPanel Orientation="Horizontal">
                 <Button  x:Name="Start" Content="Получить" Width="200" Height="70" Command="{Binding AddCommand}"/>
                 <Button  x:Name="StartAuto" Content="Автономный запуск" Width="200" Height="70" Command="{Binding AutoAddCommand}"/>
+                <Button  x:Name="StopAuto" Content="Остановить автономный запуск" Width="200" Height="70" Command="{Binding StopAutoAddCommand}"/>
                 <Button  x:Name="InputDate" Content="Ввести дату" Width="200" Height="70" Command="{Binding InputDate}"/>
             </StackPanel>
 

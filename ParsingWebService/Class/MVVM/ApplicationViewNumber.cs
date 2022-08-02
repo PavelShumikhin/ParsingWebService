@@ -11,18 +11,39 @@ using ParsingWebService.Class.MVVM;
 using ParsingWebService.Class.Команды;
 using System.Windows.Controls;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace ParsingWebService.Class
 {
     public class ApplicationViewNumber:INotifyPropertyChanged
     {
         private static WindowInputDate windowInputDate = null;
+        DispatcherTimer timer = new DispatcherTimer();
         public string day { get; set; }
         public string month { get; set; }
         private NumberRequest selectedNumber;
         private  NumberData selectedData;
         public ObservableCollection<NumberData> NumberDataCollection { get; set; }
         public ObservableCollection<NumberRequest> thisTimes { get; set; }
+        //Событие таймер
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            day = new Random().Next(1, 28).ToString();
+            month = new Random().Next(1, 12).ToString();
+            NumberRequest newRequest = new NumberRequest
+            ($"http://numbersapi.com/{month}/{day}/date");
+
+            //Добавление в базу данных
+            using (NumberContext db = new NumberContext())
+            {
+                NumberData myData = new NumberData
+                { outputRuquest = newRequest.Responce, thisTime = DateTime.Now };
+                NumberDataCollection.Add(myData);
+                selectedData = myData;
+                db.Numbers.Add(myData);
+                db.SaveChanges();
+            }
+        }
 
         //Команда додавления нового результата запроса
 
@@ -73,7 +94,7 @@ namespace ParsingWebService.Class
                 OnPropertyChanged("SelectedRequest");
             }
         }
-        //Команда вывода истории на экран
+        //Запуск автономного парсинга 
         private RelayCommand autoAddCommand;
         public RelayCommand AutoAddCommand
         {
@@ -83,30 +104,31 @@ namespace ParsingWebService.Class
                 return autoAddCommand ??
                     (autoAddCommand = new RelayCommand(obj =>
                     {
-                        while (true)
-                        {
-                            day = new Random().Next(1, 28).ToString();
-                            month = new Random().Next(1, 12).ToString();
-                            NumberRequest newRequest = new NumberRequest
-                            ($"http://numbersapi.com/{month}/{day}/date");
-
-                            //Добавление в базу данных
-                            using (NumberContext db = new NumberContext())
-                            {
-                                NumberData myData = new NumberData
-                                { outputRuquest = newRequest.Responce, thisTime = DateTime.Now };
-                                NumberDataCollection.Add(myData);
-                                selectedData = myData;
-                                db.Numbers.Add(myData);
-                                db.SaveChanges();
-                            }
-                        }
-
+                        
+                        timer.Tick += new EventHandler(timer_Tick);
+                        timer.Interval = new TimeSpan(0, 0, 1);
+                        timer.Start();
                     }));
             }
         }
 
-        // Автономные запуск парсинга
+        //Остановка автономго парсинга
+        private RelayCommand stopAutoAddCommand;
+        public RelayCommand StopAutoAddCommand
+        {
+            get
+            {
+
+                return stopAutoAddCommand ??
+                    (stopAutoAddCommand = new RelayCommand(obj =>
+                    {
+                        timer.Stop();
+                    }));
+            }
+        }
+
+
+        // Вывод истории парсинга на экран
         private RelayCommand showDB;
         public RelayCommand ShowDB
         {
@@ -131,6 +153,8 @@ namespace ParsingWebService.Class
                     }));
             }
         }
+
+
         //Ввод даты
         private RelayCommand inputDate;
         public RelayCommand InputDate
@@ -140,7 +164,7 @@ namespace ParsingWebService.Class
                 return inputDate ??
                     (inputDate = new RelayCommand(obj =>
                     {
-                        windowInputDate = new WindowInputDate();
+                        windowInputDate = new WindowInputDate(this);
                         windowInputDate.showDateWindow();
 
                     }));
@@ -198,6 +222,7 @@ namespace ParsingWebService.Class
             {
               
             };
+            MessageBox.Show("hello");
         }
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")

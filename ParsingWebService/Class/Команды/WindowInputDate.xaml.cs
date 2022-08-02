@@ -19,12 +19,12 @@ namespace ParsingWebService.Class.Команды
     /// </summary>
     public partial class WindowInputDate : Window
     {
-        public WindowInputDate()
+        public WindowInputDate(ApplicationViewNumber context)
         {
             InitializeComponent();
             fillCBDay();
             fillCBMonth();
-            DataContext = new ApplicationViewNumber();
+            DataContext = context;
         }
 
         void fillCBDay()
